@@ -1,14 +1,8 @@
 import axios from "axios";
-import { procesarEnv } from "../utils/utils.js";
+import { CONTACTOS_URL,HEADERS,HUBSPOT_API_BASE,HUBSPOT_API_KEY } from "../config/hubspot.js";
 
 // Configuración de controlador
-const ENDPOINT ='/crm/v3/objects/contacts';
-const HUBSPOT_API_BASE = `${procesarEnv('HUBSPOT_API_BASE')}${ENDPOINT}`; 
-const HUBSPOT_API_KEY = `${procesarEnv('HUBSPOT_API_KEY')}`;
-const headers = {
-  Authorization: `Bearer ${HUBSPOT_API_KEY}`,
-  'Content-Type': 'application/json',
-};
+const headers = HEADERS;
 
 
 // Crear un nuevo contacto
@@ -16,7 +10,7 @@ export const createContact = async (req, res) => {
   try {
     const { firstname, lastname, email, phone } = req.body;
     const response = await axios.post(
-      HUBSPOT_API_BASE,
+      CONTACTOS_URL,
       {
         properties: { firstname, lastname, email, phone },
       },
@@ -31,8 +25,10 @@ export const createContact = async (req, res) => {
 
 // Obtener todos los contactos
 export const getAllContacts = async (req, res) => {
+	console.log(CONTACTOS_URL);
   try {
-    const response = await axios.get(`${HUBSPOT_API_BASE}?limit=100`, { headers });
+    const response = await axios.get(`${CONTACTOS_URL}`, { headers });
+		console.log(response);
     res.status(200).json(response.data.results);
   } catch (error) {
     console.error('Error al obtener contactos:', error.response?.data || error.message);
@@ -57,7 +53,7 @@ export const getContactByEmail = async (req, res) => {
   try {
     const { email } = req.params;
     const response = await axios.get(
-      `${HUBSPOT_API_BASE}/search`,
+      `${HUBSPOT_API_BASE}search`,
       {
         headers,
         data: {
