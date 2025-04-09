@@ -31,7 +31,9 @@ export const getAllContacts = async (req, res) => {
 			`${CONTACTOS_URL}`,
 			{ 
 				headers,
-				properties:['firstname','lastname','email','phone']
+				params: {
+          properties: 'firstname,lastname,email,phone'
+        }
 			},
 		);
 		console.log(response);
@@ -49,7 +51,10 @@ export const getContactById = async (req, res) => {
     const response = await axios.get(
 			`${CONTACTOS_URL}/${id}`,
 			{
-				headers
+				headers,
+				params: {
+          properties: 'phone,firstname,lastname,email'
+        }
 			}
 		);
     res.status(200).json(response.data);
@@ -81,7 +86,7 @@ export const getContactByEmail = async (req, res) => {
 						]
 					},
 				],	
-				properties: ['firstname', 'lastname', 'email', 'phone'],
+				properties:['firstname','lastname','email','phone']
 			},
 			{ 
 				headers 
