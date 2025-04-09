@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import {jwt} from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import user from '../templates/user.json' with { type: 'json' };
 
 // Router autentificación
