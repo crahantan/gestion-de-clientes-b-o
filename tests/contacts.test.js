@@ -8,10 +8,12 @@ import contacts from '../src/routes/contacts.js'
 import auth from '../src/routes/auth.js';
 import { opcionesCors } from '../src/config/cors.js';
 import { procesarEnv } from '../src/utils/utils.js';
+import user from '../src/templates/user.json' with { type: 'json' };
 
 
 dotenv.config();
 
+console.log(user);
 
 const apiKey = HUBSPOT_API_KEY;
 
@@ -40,9 +42,22 @@ app.use('/api',contacts);
 describe('🧪 Tests de Ruta Contactos', () => {
 
   let idTest = null;
+	let token = null;
+  const emailUnico = `test_${Date.now()}@mail.com`;
+
+	// Login
+	test('POST /auth/login → debe devolver un JWT (200)', async () => {
+    const response = await request(app)
+      .post('/auth/login')
+      .send(user);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('token');
+
+    token = response.body.token; // lo usamos para las siguientes pruebas
+  });
 
   test('POST /api/contacts → debe crear un nuevo contacto (201)', async () => {
-    const emailUnico = `test_${Date.now()}@mail.com`;
 
     const response = await request(app)
       .post('/api/contacts')
@@ -68,7 +83,7 @@ describe('🧪 Tests de Ruta Contactos', () => {
     expect(Array.isArray(response.body.results)).toBe(true);
   });
 
-  test('GET /api/contacts/:id → debe retornar un contacto específico (200)', async () => {
+  test('GET /api/contacts/:id → debe retornar un contacto específico por id (200)', async () => {
     if (!idTest) return;
 
     const response = await request(app)
@@ -77,6 +92,15 @@ describe('🧪 Tests de Ruta Contactos', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('id', idTest);
+  });
+
+	test('GET /api/contacts/email/:email → debe retornar un contacto específico por email ', async () => {
+    const response = await request(app)
+      .get(`/api/contacts/email/${encodeURIComponent(emailUnico)}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.statusCode).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
   });
 
   test('PUT /api/contacts/:id → debe actualizar el contacto (200)', async () => {
