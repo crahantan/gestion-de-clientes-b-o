@@ -5,7 +5,7 @@ dotenv.config();
 const HUBSPOT_API_BASE = process.env.HUBSPOT_API_BASE || '';
 const HUBSPOT_API_KEY = process.env.HUBSPOT_API_KEY || '';
 
-// configuración de HEADERS
+// Configuración de HEADERS
 const HEADERS = {
   Authorization: `Bearer ${HUBSPOT_API_KEY}`,
   'Content-Type': 'application/json',

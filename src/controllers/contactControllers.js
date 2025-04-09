@@ -7,6 +7,7 @@ const headers = HEADERS;
 
 // Crear un nuevo contacto
 export const createContact = async (req, res) => {
+	console.log(req.body);
   try {
     const { firstname, lastname, email, phone } = req.body;
     const response = await axios.post(
@@ -25,9 +26,14 @@ export const createContact = async (req, res) => {
 
 // Obtener todos los contactos
 export const getAllContacts = async (req, res) => {
-	console.log(CONTACTOS_URL);
   try {
-    const response = await axios.get(`${CONTACTOS_URL}`, { headers });
+    const response = await axios.get(
+			`${CONTACTOS_URL}`,
+			{ 
+				headers,
+				properties:['firstname','lastname','email','phone']
+			},
+		);
 		console.log(response);
     res.status(200).json(response.data.results);
   } catch (error) {
@@ -40,11 +46,23 @@ export const getAllContacts = async (req, res) => {
 export const getContactById = async (req, res) => {
   try {
     const { id } = req.params;
-    const response = await axios.get(`${HUBSPOT_API_BASE}/${id}`, { headers });
+    const response = await axios.get(
+			`${CONTACTOS_URL}/${id}`,
+			{ 
+				properties: ['firstname', 'lastname', 'email', 'phone'],
+				headers:headers
+			},
+			{
+			},
+		);
     res.status(200).json(response.data);
   } catch (error) {
-    console.error('Error al obtener contacto por ID:', error.response?.data || error.message);
-    res.status(404).json({ error: 'Contacto no encontrado' });
+    console.error('Error al buscar contacto por id:', error.message);
+		if(error.response?.status == 404){
+			res.status(404).json({ error: 'Contacto no existe' });
+		}else{
+			res.status(error.response?.status).json({ error: 'Error interno'});
+		}
   }
 };
 
@@ -52,29 +70,34 @@ export const getContactById = async (req, res) => {
 export const getContactByEmail = async (req, res) => {
   try {
     const { email } = req.params;
-    const response = await axios.get(
-      `${HUBSPOT_API_BASE}search`,
-      {
-        headers,
-        data: {
-          filterGroups: [
-            {
-              filters: [
-                {
-                  propertyName: 'email',
-                  operator: 'EQ',
-                  value: email,
-                },
-              ],
-            },
-          ],
-        },
-      }
+    const response = await axios.post(
+			`${CONTACTOS_URL}/search`,
+			{
+				filterGroups: [
+					{
+						filters: [
+							{
+								propertyName: 'email',
+								operator: 'EQ',
+								value: email
+							}
+						]
+					},
+				],	
+				properties: ['firstname', 'lastname', 'email', 'phone'],
+			},
+			{ 
+				headers 
+			}
     );
     res.status(200).json(response.data.results);
   } catch (error) {
-    console.error('Error al buscar contacto por email:', error.response?.data || error.message);
-    res.status(404).json({ error: 'Contacto no encontrado por email' });
+    console.error('Error al buscar contacto por email:', error.message);
+		if(error.response?.status == 404){
+			res.status(404).json({ error: 'Contacto no existe' });
+		}else{
+			res.status(error.response?.status).json({ error: 'Error interno'});
+		}
   }
 };
 
@@ -83,28 +106,72 @@ export const updateContact = async (req, res) => {
   try {
     const { id } = req.params;
     const { firstname, lastname, email, phone } = req.body;
-    const response = await axios.patch(
-      `${HUBSPOT_API_BASE}/${id}`,
-      {
-        properties: { firstname, lastname, email, phone },
-      },
-      { headers }
-    );
-    res.status(200).json(response.data);
+		const url = `${CONTACTOS_URL}/${id}`;
+
+		// Validamos existencia de contacto
+		await axios.get(
+			url,
+			{
+				headers
+			}
+		).then( function (resp) {
+			if(resp.status == 200){
+				axios.patch(
+					url,
+					{
+						properties: { firstname, lastname, email, phone },
+					},
+					{ 
+						headers 
+					}
+				).then( function (response) {
+					res.status(response.status).json({'mensaje:': 'Actualización de contacto exitosa!' });
+				});
+			}
+		});
   } catch (error) {
-    console.error('Error al actualizar contacto:', error.response?.data || error.message);
-    res.status(500).json({ error: 'No se pudo actualizar el contacto' });
+    console.error('Error al actualizar contacto:', error.message);
+		if(error.response?.status == 404){
+			res.status(404).json({ error: 'Contacto no existe' });
+		}else{
+			res.status(error.response?.status).json({ error: 'Error interno'});
+		}
   }
 };
 
 // Eliminar contacto por ID
 export const deleteContact = async (req, res) => {
-  try {
     const { id } = req.params;
-    await axios.delete(`${HUBSPOT_API_BASE}/${id}`, { headers });
-    res.status(204).send(); // No content
-  } catch (error) {
-    console.error('Error al eliminar contacto:', error.response?.data || error.message);
-    res.status(500).json({ error: 'No se pudo eliminar el contacto' });
-  }
+		const url = `${CONTACTOS_URL}/${id}`;
+		try{
+			// Validamos existencia de contacto
+			await axios.get(
+				url,
+				{
+					headers
+				}
+			).then (function (resp) {
+				if(resp.status == 200){
+					// Eliminamos contacto
+					axios.delete(
+						url,
+						{
+							headers
+						}
+					).then(function (response) {
+						if(response.status == 204){
+							res.status(204).send();
+							console.log("Eliminado con éxito!!");
+						}
+					});
+				}
+				});
+		}catch (error) {
+			console.error('Error al eliminar contacto:', error.message);
+			if(error.response?.status == 404){
+				res.status(404).json({ error: 'Contacto no existe' });
+			}else{
+				res.status(error.response?.status).json({ error: 'Error interno'});
+			}
+		}
 };
