@@ -5,6 +5,7 @@ import cors from 'cors';
 import express from 'express';
 import dotenv from 'dotenv';
 import contacts from '../src/routes/contacts.js'
+import auth from '../src/routes/auth.js';
 import { opcionesCors } from '../src/config/cors.js';
 import { procesarEnv } from '../src/utils/utils.js';
 
@@ -12,7 +13,7 @@ import { procesarEnv } from '../src/utils/utils.js';
 dotenv.config();
 
 
-const apiKey = process.env.HUBSPOT_API_KEY;
+const apiKey = HUBSPOT_API_KEY;
 
 // Dominios, métodos y headers
 const DOMINIOS_PERMITIDOS = procesarEnv('DOMINIOS_PERMITIDOS');
@@ -31,9 +32,9 @@ app.use(helmet());
 const optCors= opcionesCors(DOMINIOS_PERMITIDOS,METODOS_PERMITIDOS,HEADERS_PERMITIDOS);
 app.use(cors(optCors));
 
-// Llamamos a router de contactos
+// Llamamos a los routers
+app.use('/auth',auth);
 app.use('/api',contacts);
-
 
 // Función describe de test
 describe('🧪 Tests de Ruta Contactos', () => {

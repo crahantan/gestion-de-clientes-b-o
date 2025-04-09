@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import contacts from './routes/contacts.js';
+import auth from './routes/auth.js';
 import { procesarEnv } from './utils/utils.js';
 import { opcionesCors } from './config/cors.js';
 
@@ -25,6 +26,9 @@ app.use(helmet());
 // Cors
 const optCors= opcionesCors(DOMINIOS_PERMITIDOS,METODOS_PERMITIDOS,HEADERS_PERMITIDOS);
 app.use(cors(optCors));
+
+// Ruta autorización 
+app.use('/auth',auth);
 
 // Ruta contactos
 app.use('/api',contacts);
