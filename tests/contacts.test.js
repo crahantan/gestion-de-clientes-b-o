@@ -38,7 +38,7 @@ app.use('/api',contacts);
 // Función describe de test
 describe('🧪 Tests de Ruta Contactos', () => {
 
-  let createdContactId = null;
+  let idTest = null;
 
   test('POST /api/contacts → debe crear un nuevo contacto (201)', async () => {
     const emailUnico = `test_${Date.now()}@mail.com`;
@@ -47,15 +47,15 @@ describe('🧪 Tests de Ruta Contactos', () => {
       .post('/api/contacts')
       .set('Authorization', `Bearer ${apiKey}`)
       .send({
-        firstname: 'Test',
-        lastname: 'Usuario',
+        firstname: 'Luis_Alvarez',
+        lastname: 'test',
         email: emailUnico,
         phone: '5512345678',
       });
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('id');
-    createdContactId = response.body.id;
+    idTest = response.body.id;
   });
 
   test('GET /api/contacts → debe retornar un listado de contactos (200)', async () => {
@@ -68,26 +68,26 @@ describe('🧪 Tests de Ruta Contactos', () => {
   });
 
   test('GET /api/contacts/:id → debe retornar un contacto específico (200)', async () => {
-    if (!createdContactId) return;
+    if (!idTest) return;
 
     const response = await request(app)
-      .get(`/api/contacts/${createdContactId}`)
+      .get(`/api/contacts/${idTest}`)
       .set('Authorization', `Bearer ${apiKey}`);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('id', createdContactId);
+    expect(response.body).toHaveProperty('id', idTest);
   });
 
   test('PUT /api/contacts/:id → debe actualizar el contacto (200)', async () => {
-    if (!createdContactId) return;
+    if (!idTest) return;
 
     const response = await request(app)
-      .put(`/api/contacts/${createdContactId}`)
+      .put(`/api/contacts/${idTest}`)
       .set('Authorization', `Bearer ${apiKey}`)
       .send({
-        firstname: 'Test Actualizado',
-        lastname: 'Usuario',
-        email: `actualizado_${Date.now()}@mail.com`,
+        firstname: 'Luis_Alvarez_test',
+        lastname: 'Actualizado',
+        email: `luis_actualizado_${Date.now()}@mail.com`,
         phone: '5567891234',
       });
 
@@ -96,10 +96,10 @@ describe('🧪 Tests de Ruta Contactos', () => {
   });
 
   test('DELETE /api/contacts/:id → debe eliminar el contacto (204)', async () => {
-    if (!createdContactId) return;
+    if (!idTest) return;
 
     const response = await request(app)
-      .delete(`/api/contacts/${createdContactId}`)
+      .delete(`/api/contacts/${idTest}`)
       .set('Authorization', `Bearer ${apiKey}`);
 
     expect(response.statusCode).toBe(204);
