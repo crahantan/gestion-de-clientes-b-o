@@ -3,7 +3,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import contacts from './routes/contacts.js';
-import { procesarEnv,opcionesCors } from './utils/utils.js';
+import { procesarEnv } from './utils/utils.js';
+import { opcionesCors } from './config/cors.js';
 
 // Obtenemos configuración por default de ENV
 dotenv.config();

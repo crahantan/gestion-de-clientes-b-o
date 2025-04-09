@@ -35,7 +35,7 @@ export const getAllContacts = async (req, res) => {
 			},
 		);
 		console.log(response);
-    res.status(200).json(response.data.results);
+    res.status(200).json(response.data);
   } catch (error) {
     console.error('Error al obtener contactos:', error.response?.data || error.message);
     res.status(500).json({ error: 'No se pudieron obtener los contactos' });
@@ -48,12 +48,9 @@ export const getContactById = async (req, res) => {
     const { id } = req.params;
     const response = await axios.get(
 			`${CONTACTOS_URL}/${id}`,
-			{ 
-				properties: ['firstname', 'lastname', 'email', 'phone'],
-				headers:headers
-			},
 			{
-			},
+				headers
+			}
 		);
     res.status(200).json(response.data);
   } catch (error) {
@@ -90,7 +87,9 @@ export const getContactByEmail = async (req, res) => {
 				headers 
 			}
     );
-    res.status(200).json(response.data.results);
+    res.status(200).json({
+			"body":response.data.results
+		});
   } catch (error) {
     console.error('Error al buscar contacto por email:', error.message);
 		if(error.response?.status == 404){
@@ -125,7 +124,11 @@ export const updateContact = async (req, res) => {
 						headers 
 					}
 				).then( function (response) {
-					res.status(response.status).json({'mensaje:': 'Actualización de contacto exitosa!' });
+					res.status(response.status).json(
+						{
+							'mensaje:': 'Actualización de contacto exitosa!',
+							'body': response.data 
+						});
 				});
 			}
 		});
