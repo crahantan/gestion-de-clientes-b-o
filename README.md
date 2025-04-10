@@ -89,10 +89,7 @@ npm run dev
 
 ## 🌐 Frontend
 
-Abre tu navegador y dirígete a: `http://localhost:3000`
-Observarás la siguiente interfaz para interactuar con ella:
-
-Podrás:
+Abre tu navegador y dirígete a: `http://localhost:3000`, observarás la siguiente interfaz para interactuar con ella:
 - Login
 - Comprobar salud de la API
 - Crear nuevos contactos
@@ -116,6 +113,24 @@ Las pruebas incluyen:
 - CRUD completo de contactos usando 
 - Manejo de errores
 
+---
+
+## 🔐 Autenticación
+
+# Login
+- Endpoint autenticación
+```http
+POST /auth/login
+```
+
+# JSON
+- Usuario de autenticación:
+```json
+{
+  "username": "admin",
+  "password": "12345"
+}
+```
 
 
 
