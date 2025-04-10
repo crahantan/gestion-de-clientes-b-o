@@ -3,6 +3,8 @@
 Este proyecto implementa una API RESTful para gestionar contactos a través de la API de HubSpot.  
 Incluye autenticación con JSON Web Tokens (JWT), validación y sanitización de datos, y pruebas automatizadas con Jest + Supertest.
 
+![Imagen de Interfaz](img.png)
+
 ---
 
 ## 🚀 Características principales
@@ -74,8 +76,8 @@ Tu JWT Generado es:  supersecretoseguro
 npm start
 ```
 
-▶️ Ejecutar el servidor localmente (desarrollo)
-- Al ejecutar el servidor en modo de desarrollo podras utlizar nodaemon, funcionalidad que mantiene el servidor corriendo cuando realizas modificaciones al código, evitando así levantar el servidor cada vez que se realiza un cambio (Hotreload)
+▶️ Ejecutar el servidor localmente en modo desarrollo
+- Al ejecutar el servidor en modo de desarrollo podras utlizar nodaemon, funcionalidad que mantiene el servidor corriendo cuando realizas modificaciones al código, evitando así levantar el servidor cada vez que se realiza un cambio (Hot Reloading)
 ```bash
 npm run dev
 ```
