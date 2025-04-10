@@ -36,6 +36,7 @@ Incluye autenticación con JSON Web Tokens (JWT), validación y sanitización de
 ## ⚙️ Requisitos previos
 
 - Node.js v18 o superior
+- NPM v10.8 o superior
 - Cuenta en HubSpot con una API Key 
 
 ---
@@ -130,6 +131,12 @@ POST /auth/login
   "username": "admin",
   "password": "12345"
 }
+```
+
+- ✅ Devuelve un token JWT.
+📌 Usa este token en los headers de las rutas protegidas:
+```makefile
+Authorization: Bearer TU_TOKEN
 ```
 
 ---
