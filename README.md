@@ -1,4 +1,4 @@
-# 📬 HubSpot Contacts API (JWT + Node.js + Express)
+# 📬 API de Gestión de Contactos con HubSpot API (JWT + Node.js + Express)
 
 Este proyecto implementa una API RESTful para gestionar contactos a través de la API de HubSpot.  
 Incluye autenticación con JSON Web Tokens (JWT), validación y sanitización de datos, y pruebas automatizadas con Jest + Supertest.
@@ -33,15 +33,15 @@ Incluye autenticación con JSON Web Tokens (JWT), validación y sanitización de
 ## ⚙️ Requisitos previos
 
 - Node.js v18 o superior
-- Cuenta en HubSpot con una API Key o acceso vía token privado
+- Cuenta en HubSpot con una API Key 
 
 ---
 
 ## 📦 Instalación
 
 ```bash
-git clone https://github.com/tu-usuario/tu-repo.git
-cd tu-repo
+git clone https://github.com/crahantan/gestion-de-clientes-b-o.git
+cd gestion-de-clientes-b-o
 npm install
 ```
 
@@ -54,4 +54,24 @@ HUBSPOT_API_BASE=https://api.hubapi.com
 DOMINIO=localhost
 JWT_SECRET=supersecretoseguro
 ```
+
+▶️ Ejecutar el servidor localmente
+```bash
+npm start
+```
+
+▶️ Ejecutar el servidor localmente (desarrollo)
+```bash
+npm run dev
+```
+
+🧪 Ejecutar pruebas unitarias
+```bash
+npm test
+```
+
+
+
+
+
 
