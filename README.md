@@ -87,10 +87,19 @@ npm run dev
 
 ---
 
-## ⚡Frontend
+## 🌐 Frontend
 
-- Abre tu navegador y dirígete a: `http://localhost:3000`
-- Observarás la siguiente interfaz para interactuar con ella:
+Abre tu navegador y dirígete a: `http://localhost:3000`
+Observarás la siguiente interfaz para interactuar con ella:
+
+Podrás:
+- Login
+- Comprobar salud de la API
+- Crear nuevos contactos
+- Buscar por ID o Email
+- Ver contactos
+- Eliminar contactos por ID
+
 
 ![Imagen de Interfaz](img.png)
 
@@ -102,6 +111,10 @@ npm run dev
 ```bash
 npm test
 ```
+Las pruebas incluyen:
+- Login y validación de JWT
+- CRUD completo de contactos usando 
+- Manejo de errores
 
 
 
