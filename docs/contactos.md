@@ -167,9 +167,7 @@ Parámetros de URL:
 Parámetros de URL:
 - id (requerido): ID del contacto
 
-- Respuesta Exitosa (204 No Content):
-(Sin cuerpo de respuesta)
-
+- Respuesta Exitosa (204) No Content: (Sin cuerpo de respuesta)
 - Errores (404) Not Found: Si el contacto no existe.
 - Error (500) Internal Server Error: Error interno del servidor.
 
