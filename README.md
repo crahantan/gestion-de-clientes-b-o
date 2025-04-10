@@ -55,6 +55,18 @@ DOMINIO=localhost
 JWT_SECRET=supersecretoseguro
 ```
 
+▶️ Construcción del secreto JWT
+- Dirigite al directorio /src/utils
+- Identifica el fichero jwtSecret.js
+- Ejecuta el siguiente comando
+```bash
+node jwtSecret.js
+```
+- Te lanzará secreto que colocarás en el archivo .env
+```bash
+Tu JWT Generado es:  supersecretoseguro
+```
+
 ▶️ Ejecutar el servidor localmente
 ```bash
 npm start
