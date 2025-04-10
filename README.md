@@ -117,13 +117,13 @@ Las pruebas incluyen:
 
 ## 🔐 Autenticación
 
-# Login
+### Login
 - Endpoint autenticación
 ```http
 POST /auth/login
 ```
 
-# JSON
+### JSON
 - Usuario de autenticación:
 ```json
 {
@@ -131,6 +131,13 @@ POST /auth/login
   "password": "12345"
 }
 ```
+
+---
+
+## ✍️ Autor
+Desarrollado por Luis Álvarez
+
+---
 
 
 
