@@ -74,16 +74,25 @@ Tu JWT Generado es:  supersecretoseguro
 
 ## 🚀 Levantar Servidor
 
-▶️ Ejecutar el servidor localmente
+▶️ Levantar servidor localmente
 ```bash
 npm start
 ```
 
-▶️ Ejecutar el servidor localmente en modo desarrollo
-- Al ejecutar el servidor en modo de desarrollo podras utlizar nodaemon, funcionalidad que mantiene el servidor corriendo cuando realizas modificaciones al código, evitando así levantar el servidor cada vez que se realiza un cambio (Hot Reloading)
+▶️ Levantar servidor localmente en modo desarrollo
+- Al levantar el servidor en modo de desarrollo podras utlizar nodemon, funcionalidad que mantiene al servidor activo cuando realizas modificaciones al código, evitando así, levantarlo cada vez que se realiza un cambio (Hot Reloading)
 ```bash
 npm run dev
 ```
+
+---
+
+## ⚡Frontend
+
+- Abre tu navegador y dirígete a: `http://localhost:3000`
+- Observarás la siguiente interfaz para interactuar con ella:
+
+![Imagen de Interfaz](img.png)
 
 ---
 
@@ -93,6 +102,8 @@ npm run dev
 ```bash
 npm test
 ```
+
+
 
 
 
