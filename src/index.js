@@ -5,16 +5,12 @@ import dotenv from 'dotenv';
 import contacts from './routes/contacts.js';
 import auth from './routes/auth.js';
 import { procesarEnv } from './utils/utils.js';
-import { opcionesCors } from './config/cors.js';
 
 // Obtenemos configuración por default de ENV
 dotenv.config();
 
 // ENV
 const PORT = parseInt(procesarEnv('PORT',3000));
-const DOMINIOS_PERMITIDOS = procesarEnv('DOMINIOS_PERMITIDOS');
-const METODOS_PERMITIDOS = procesarEnv('METODOS_PERMITIDOS', ['GET', 'POST', 'OPTIONS']);
-const HEADERS_PERMITIDOS = procesarEnv('ALLOWED_HEADERS', ['Content-Type', 'Authorization']);
 
 // Inicializamos app de express
 const app = express();
@@ -24,8 +20,7 @@ app.use(express.json());
 app.use(helmet());
 
 // Cors
-const optCors= opcionesCors(DOMINIOS_PERMITIDOS,METODOS_PERMITIDOS,HEADERS_PERMITIDOS);
-app.use(cors(optCors));
+app.use(cors());
 
 // Ruta autorización 
 app.use('/auth',auth);

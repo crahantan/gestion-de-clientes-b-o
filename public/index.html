@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luis Álvarez - Gestión de Clientes B & O</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <h1>💼 Luis Álvarez - Gestión de Clientes B & O</h1>
+
+  <h2>🔐 Iniciar sesión</h2>
+  <input type="text" id="username" placeholder="Usuario" />
+  <input type="password" id="password" placeholder="Contraseña" />
+  <button onclick="login()">Login</button>
+
+	<h2>✏️ Registrar nuevo contacto</h2>
+	<input type="text" id="nuevoNombre" placeholder="Nombre" />
+	<input type="text" id="nuevoApellido" placeholder="Apellido" />
+	<input type="email" id="nuevoEmail" placeholder="Correo electrónico" />
+	<input type="tel" id="nuevoTelefono" placeholder="Teléfono" />
+	<button onclick="registrarContacto()">Registrar</button>
+	<p id="resultado-registro"></p>
+
+
+	<h2>🔎 Buscar contacto por Id</h2>
+  <input type="text" id="buscarId" placeholder="ID del contacto a buscar" />
+  <button onclick="buscarPorId()">Buscar</button>
+  <p id="resultado-busqueda"></p>
+
+	<h2>🔎 Buscar contacto por Email</h2>
+	<input type="email" id="buscarEmail" placeholder="Correo del contacto a buscar" />
+	<button onclick="buscarPorEmail()">Buscar</button>
+	<p id="resultado-email"></p>
+
+  <h2>📬 Obtener todos los contactos</h2>
+  <button onclick="obtenerContactos()">Cargar contactos</button>
+  <ul id="lista-contactos"></ul>
+
+	<h2>✏️ Actualizar contacto por ID</h2>
+	<input type="text" id="updateId" placeholder="ID del contacto" />
+	<input type="text" id="updateNombre" placeholder="Nuevo Nombre" />
+	<input type="text" id="updateApellido" placeholder="Nuevo Apellido" />
+	<input type="email" id="updateEmail" placeholder="Nuevo Correo electrónico" />
+	<input type="tel" id="updateTelefono" placeholder="Nuevo Teléfono" />
+	<button onclick="actualizarContacto()">Actualizar</button>
+	<p id="resultado-actualizacion"></p>
+
+	<h2>❌ Eliminar contacto por ID</h2>
+  <input type="text" id="contactId" placeholder="ID del contacto" />
+  <button onclick="eliminarContacto()">Eliminar Contacto</button>
+
+  <script>
+    const API_BASE = 'http://localhost:3000';
+
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await axios.post(`${API_BASE}/auth/login`, {
+          username,
+          password
+        });
+
+        const token = res.data.token;
+        localStorage.setItem('token', token);
+        alert('✅ Login exitoso');
+
+				document.getElementById('username').value = '';
+				document.getElementById('password').value = '';
+      } catch (error) {
+        alert(`❌ Error de login: ${error.response?.data?.error || error.message}`);
+      }
+    }
+
+		async function registrarContacto() {
+			const firstname = document.getElementById('nuevoNombre').value.trim();
+			const lastname = document.getElementById('nuevoApellido').value.trim();
+			const email = document.getElementById('nuevoEmail').value.trim();
+			const phone = document.getElementById('nuevoTelefono').value.trim();
+			const resultado = document.getElementById('resultado-registro');
+
+			const token = localStorage.getItem('token');
+			if (!token) return alert('⚠️ Debes iniciar sesión primero.');
+
+			if (!firstname || !lastname || !email || !phone) {
+				return alert('⚠️ Todos los campos son obligatorios.');
+			}
+
+			try {
+				const response = await axios.post(`${API_BASE}/api/contacts`, {
+					firstname,
+					lastname,
+					email,
+					phone
+				}, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					}
+				});
+
+				resultado.textContent = `✅ Contacto registrado con ID: ${response.data.id}`;
+				// Opcional: limpiar campos
+				document.getElementById('nuevoNombre').value = '';
+				document.getElementById('nuevoApellido').value = '';
+				document.getElementById('nuevoEmail').value = '';
+				document.getElementById('nuevoTelefono').value = '';
+
+				obtenerContactos(); // recarga la lista
+			} catch (error) {
+				resultado.textContent = `❌ Error al registrar: ${error.response?.data?.error || error.message}`;
+			}
+		}
+
+		async function buscarPorId() {
+      const id = document.getElementById('buscarId').value.trim();
+      const token = localStorage.getItem('token');
+      const resultado = document.getElementById('resultado-busqueda');
+
+      if (!id) return alert('⚠️ Debes escribir un ID');
+      if (!token) return alert('⚠️ Debes iniciar sesión primero.');
+
+      try {
+        const response = await axios.get(`${API_BASE}/api/contacts/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const props = response.data.properties;
+
+        resultado.innerHTML = `
+					<strong>Id:</strong> ${id || ''}<br>
+          <strong>Nombre:</strong> ${props.firstname || ''}<br>
+					<strong>Apellido:</strong> ${props.lastname || ''}<br>
+          <strong>Email:</strong> ${props.email || ''}<br>
+          <strong>Teléfono:</strong> ${props.phone || ''}
+        `;
+
+				document.getElementById('buscarId').value = '';
+      } catch (error) {
+        resultado.textContent = `❌ No se encontró el contacto: ${error.response?.data?.error || error.message}`;
+      }
+    }
+
+		async function buscarPorEmail() {
+			const email = document.getElementById('buscarEmail').value.trim();
+			const token = localStorage.getItem('token');
+			const resultado = document.getElementById('resultado-email');
+
+			if (!email) return alert('⚠️ Debes escribir un correo');
+			if (!token) return alert('⚠️ Debes iniciar sesión primero.');
+
+			try {
+				const response = await axios.get(`${API_BASE}/api/contacts/email/${encodeURIComponent(email)}`, {
+					headers: {
+						Authorization: `Bearer ${token}`
+					}
+				});
+
+				const contactos = response.data.body;
+
+				if (contactos.length === 0) {
+					resultado.textContent = '❌ No se encontró ningún contacto con ese email.';
+					return;
+				}
+
+				const contacto = contactos[0].properties;
+				const id = contactos[0].id;
+
+				resultado.innerHTML = `
+					<strong>Id:</strong> ${id || ''}<br>
+					<strong>Nombre:</strong> ${contacto.firstname || ''}<br>
+					<strong>Apellido:</strong> ${contacto.lastname || ''}<br>
+					<strong>Email:</strong> ${contacto.email || ''}<br>
+					<strong>Teléfono:</strong> ${contacto.phone || ''}
+				`;
+
+				document.getElementById('buscarEmail').value = '';
+			} catch (error) {
+				resultado.textContent = `❌ No se encontró el contacto: ${error.response?.data?.error || error.message}`;
+			}
+		}
+
+    async function obtenerContactos() {
+      const token = localStorage.getItem('token');
+			const resultado = document.getElementById('lista-contactos');
+
+      if (!token) {
+        alert('⚠️ Debes iniciar sesión primero.');
+        return;
+      }
+
+      try {
+        const res = await axios.get(`${API_BASE}/api/contacts`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+				resultado.innerHTML = '';
+				const titulos = document.createElement('tr');
+      	titulos.innerHTML = `
+					<td style="text-align: center; font-weight: bold">${"Id"}</td>
+					<td style="text-align: center; font-weight: bold">${"Nombre"}</td>
+					<td style="text-align: center; font-weight: bold">${"Apellido"}</td>
+					<td style="text-align: center; font-weight: bold">${"Email"}</td>
+					<td style="text-align: center; font-weight: bold">${"Teléfono"}</td>
+				`;
+
+				resultado.appendChild(titulos);
+
+				const contactos = res.data.results;
+
+        contactos.forEach(contacto => {
+          const li = document.createElement('tr');
+					li.innerHTML = `
+						<td style="text-align: center">${contacto.id || ''}</td>
+						<td style="text-align: center">${contacto.properties.firstname || ''}</td>
+						<td style="text-align: center">${contacto.properties.lastname || ''}</td>
+						<td style="text-align: center">${contacto.properties.email || ''}</td>
+						<td style="text-align: center">${contacto.properties.phone || ''}</td>
+					`;
+					
+          resultado.appendChild(li);
+        });
+
+      } catch (error) {
+        alert(`❌ Error al obtener contactos: ${error.response?.data?.error || error.message}`);
+      }
+    }
+
+		async function actualizarContacto() {
+			const id = document.getElementById('updateId').value.trim();
+			const firstname = document.getElementById('updateNombre').value.trim();
+			const lastname = document.getElementById('updateApellido').value.trim();
+			const email = document.getElementById('updateEmail').value.trim();
+			const phone = document.getElementById('updateTelefono').value.trim();
+			const resultado = document.getElementById('resultado-actualizacion');
+			
+			const token = localStorage.getItem('token');
+			if (!token) return alert('⚠️ Debes iniciar sesión primero.');
+
+			if (!id || !firstname || !lastname || !email || !phone) {
+				return alert('⚠️ Todos los campos son obligatorios.');
+			}
+
+			try {
+				const response = await axios.put(`${API_BASE}/api/contacts/${id}`, {
+					firstname,
+					lastname,
+					email,
+					phone
+				}, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					}
+				});
+
+				resultado.textContent = `✅ Contacto actualizado con ID: ${response.data.body.id}`;
+
+				document.getElementById('updateId').value = '';
+				document.getElementById('updateNombre').value = '';
+				document.getElementById('updateApellido').value = '';
+				document.getElementById('updateEmail').value = '';
+				document.getElementById('updateTelefono').value = '';
+			} catch (error) {
+				resultado.textContent = `❌ Error al actualizar: ${error.response?.data?.error || error.message}`;
+			}
+		}
+
+		async function eliminarContacto() {
+			const id = document.getElementById('contactId').value.trim();
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('⚠️ Debes iniciar sesión primero.');
+        return;
+      }
+
+      const confirmar = confirm('¿Estás seguro de eliminar este contacto?');
+      if (!confirmar) return;
+
+      try {
+        await axios.delete(`${API_BASE}/api/contacts/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        alert('✅ Contacto eliminado');
+				document.getElementById('contactId').value = '';
+      } catch (error) {
+        alert(`❌ Error al eliminar: ${error.response?.data?.error || error.message}`);
+      }
+    }
+		
+  </script>
+</body>
+</html>
+
