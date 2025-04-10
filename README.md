@@ -67,17 +67,22 @@ node jwtSecret.js
 Tu JWT Generado es:  supersecretoseguro
 ```
 
+## 🚀 Ejecución del Servidor
+
 ▶️ Ejecutar el servidor localmente
 ```bash
 npm start
 ```
 
 ▶️ Ejecutar el servidor localmente (desarrollo)
+- Al ejecutar el servidor en modo de desarrollo podras utlizar nodaemon, funcionalidad que mantiene el servidor corriendo cuando realizas modificaciones al código, evitando así levantar el servidor cada vez que se realiza un cambio (Hotreload)
 ```bash
 npm run dev
 ```
 
-🧪 Ejecutar pruebas unitarias
+## 🧪 Ejecutar pruebas unitarias
+
+▶️ Para ejecuar pruebas unitarias utilizando Jest, ejecuta el siguiente comando:
 ```bash
 npm test
 ```
