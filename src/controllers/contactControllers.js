@@ -7,7 +7,6 @@ const headers = HEADERS;
 
 // Crear un nuevo contacto
 export const createContact = async (req, res) => {
-	console.log(req.body);
   try {
     const { firstname, lastname, email, phone } = req.body;
     const response = await axios.post(
@@ -18,6 +17,10 @@ export const createContact = async (req, res) => {
       { headers }
     );
     res.status(201).json(response.data);
+
+		const id = response.data.id;
+
+		console.log("Contacto registrado con éxito, con id", id);
   } catch (error) {
     console.error('Error al crear contacto:', error.response?.data || error.message);
     res.status(500).json({ error: 'No se pudo crear el contacto' });
@@ -36,8 +39,8 @@ export const getAllContacts = async (req, res) => {
         }
 			},
 		);
-		console.log(response);
     res.status(200).json(response.data);
+		console.log("Búsqueda de contactos completada con éxito");
   } catch (error) {
     console.error('Error al obtener contactos:', error.response?.data || error.message);
     res.status(500).json({ error: 'No se pudieron obtener los contactos' });
@@ -58,6 +61,7 @@ export const getContactById = async (req, res) => {
 			}
 		);
     res.status(200).json(response.data);
+		console.log("Búsqueda de contacto completada con éxito, con id: ",id);
   } catch (error) {
     console.error('Error al buscar contacto por id:', error.message);
 		if(error.response?.status == 404){
@@ -95,6 +99,7 @@ export const getContactByEmail = async (req, res) => {
     res.status(200).json({
 			"body":response.data.results
 		});
+		console.log("Búsqueda de contacto completada con éxito, con email: ",email);
   } catch (error) {
     console.error('Error al buscar contacto por email:', error.message);
 		if(error.response?.status == 404){
@@ -134,6 +139,7 @@ export const updateContact = async (req, res) => {
 							'mensaje:': 'Actualización de contacto exitosa!',
 							'body': response.data 
 						});
+					console.log("Actualización de Contacto con éxito, con id: ",id);
 				});
 			}
 		});
@@ -169,7 +175,7 @@ export const deleteContact = async (req, res) => {
 					).then(function (response) {
 						if(response.status == 204){
 							res.status(204).send();
-							console.log("Eliminado con éxito!!");
+							console.log("Eliminación de contacto con éxito, con id: ",id);
 						}
 					});
 				}

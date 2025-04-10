@@ -49,6 +49,7 @@
 	<h2>❌ Eliminar contacto por ID</h2>
   <input type="text" id="contactId" placeholder="ID del contacto" />
   <button onclick="eliminarContacto()">Eliminar Contacto</button>
+	<p id="resultado-eliminacion"></p>
 
   <script>
     const API_BASE = 'http://localhost:3000';
@@ -108,7 +109,6 @@
 				document.getElementById('nuevoEmail').value = '';
 				document.getElementById('nuevoTelefono').value = '';
 
-				obtenerContactos(); // recarga la lista
 			} catch (error) {
 				resultado.textContent = `❌ Error al registrar: ${error.response?.data?.error || error.message}`;
 			}
@@ -260,7 +260,7 @@
 					}
 				});
 
-				resultado.textContent = `✅ Contacto actualizado con ID: ${response.data.body.id}`;
+				resultado.textContent = `✅ Contacto actualizado con ID: ${id}`;
 
 				document.getElementById('updateId').value = '';
 				document.getElementById('updateNombre').value = '';
@@ -275,6 +275,8 @@
 		async function eliminarContacto() {
 			const id = document.getElementById('contactId').value.trim();
       const token = localStorage.getItem('token');
+			const resultado = document.getElementById('resultado-eliminacion');
+
       if (!token) {
         alert('⚠️ Debes iniciar sesión primero.');
         return;
@@ -290,10 +292,10 @@
           }
         });
 
-        alert('✅ Contacto eliminado');
+				resultado.textContent = `✅ Contacto eliminado con éxito, con id: ${id}`;
 				document.getElementById('contactId').value = '';
       } catch (error) {
-        alert(`❌ Error al eliminar: ${error.response?.data?.error || error.message}`);
+        resultado.textContent = `❌ Error al eliminar: ${error.response?.data?.error || error.message}`;
       }
     }
 		
