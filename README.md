@@ -3,6 +3,8 @@
 Este proyecto implementa una API RESTful para gestionar contactos a través de la API de HubSpot.  
 Incluye autenticación con JSON Web Tokens (JWT), validación y sanitización de datos, y pruebas automatizadas con Jest + Supertest.
 
+## Documentación API Contactos: ![contactos](./docs/contactos.md)
+
 ![Imagen de Interfaz](img.png)
 
 ---
