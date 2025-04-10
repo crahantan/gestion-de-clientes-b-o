@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import contacts from './routes/contacts.js';
 import auth from './routes/auth.js';
 import { procesarEnv } from './utils/utils.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 // Obtenemos configuración por default de ENV
 dotenv.config();
@@ -21,6 +24,18 @@ app.use(helmet());
 
 // Cors
 app.use(cors());
+
+// Crear el equivalente de __dirname para ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Configuramos archivos estáticos
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Ruta principal
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Ruta autorización 
 app.use('/auth',auth);
