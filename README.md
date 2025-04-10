@@ -23,6 +23,7 @@ Incluye autenticación con JSON Web Tokens (JWT), validación y sanitización de
 
 - Node.js
 - Express.js
+- NPM (`Node Package Manager`)
 - JWT (`jsonwebtoken`)
 - Axios
 - Express Validator
@@ -69,7 +70,9 @@ node jwtSecret.js
 Tu JWT Generado es:  supersecretoseguro
 ```
 
-## 🚀 Ejecución del Servidor
+---
+
+## 🚀 Levantar Servidor
 
 ▶️ Ejecutar el servidor localmente
 ```bash
@@ -81,6 +84,8 @@ npm start
 ```bash
 npm run dev
 ```
+
+---
 
 ## 🧪 Ejecutar pruebas unitarias
 
