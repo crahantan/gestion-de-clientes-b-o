@@ -14,6 +14,7 @@ dotenv.config();
 
 // ENV
 const PORT = parseInt(procesarEnv('PORT',3000));
+const DOMINIO = procesarEnv('DOMINIO','http://localhost');
 
 // Inicializamos app de express
 const app = express();
@@ -50,6 +51,12 @@ app.get('/api/health', (req, res) => {
     message: 'API Saludable',
     timestamp: new Date().toISOString()
   });
+
+	if(res.status(200)){
+		console.log('API Saludable');
+	}else {
+		console.log('API NO SALUDABLE!,REVISAR!');
+	}
 });
 
 // Manejo de errores
@@ -71,5 +78,5 @@ app.use((err, req, res, next) => {
 
 // Escuchamos en puerto
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en ${DOMINIO}:${PORT}`);
 });

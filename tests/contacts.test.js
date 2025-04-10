@@ -5,19 +5,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import contacts from '../src/routes/contacts.js'
 import auth from '../src/routes/auth.js';
-import { opcionesCors } from '../src/config/cors.js';
-import { procesarEnv } from '../src/utils/utils.js';
 import user from '../src/templates/user.json' with { type: 'json' };
 
 
 dotenv.config();
-
-
-// Dominios, métodos y headers
-const DOMINIOS_PERMITIDOS = procesarEnv('DOMINIOS_PERMITIDOS');
-const METODOS_PERMITIDOS = procesarEnv('METODOS_PERMITIDOS', ['GET', 'POST', 'OPTIONS']);
-const HEADERS_PERMITIDOS = procesarEnv('ALLOWED_HEADERS', ['Content-Type', 'Authorization']);
-
 
 // Incializamos app de prueba
 const app = express();
@@ -27,8 +18,7 @@ app.use(express.json());
 app.use(helmet());
 
 // Cors
-const optCors= opcionesCors(DOMINIOS_PERMITIDOS,METODOS_PERMITIDOS,HEADERS_PERMITIDOS);
-app.use(cors(optCors));
+app.use(cors());
 
 // Llamamos a los routers
 app.use('/auth',auth);
